@@ -65,8 +65,8 @@ public class ModrinthSearchResult
 		Slug = mod.Slug;
 		Title = mod.Name;
 		Description = mod.Summary;
-		Categories = mod.Categories.Select(x => x.Slug).ToArray();
-		DisplayCategories = mod.Categories.Select(x => x.Slug).ToArray();
+		Categories = mod.Categories.Select(Utils.GetCategoryName).ToArray();
+		DisplayCategories = mod.Categories.Select(Utils.GetCategoryName).ToArray();
 		ClientSide = "optional";
 		ServerSide = "optional";
 		ProjectType = mod.ClassId switch
