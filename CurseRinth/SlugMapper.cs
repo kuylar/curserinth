@@ -3,6 +3,7 @@ using CurseRinth.Models;
 
 namespace CurseRinth;
 
+// TODO: move this into a SQLite file
 public class SlugMapper
 {
 	private Dictionary<string, uint> SlugToIdMapping = new();
