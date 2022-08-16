@@ -98,7 +98,7 @@ public class ModrinthProject
 		Slug = mod.Slug;
 		Title = mod.Name;
 		Description = mod.Summary;
-		Categories = mod.Categories.Select(x => x.Slug).ToArray();
+		Categories = mod.Categories.Select(Utils.GetCategoryName).ToArray();
 		ClientSide = "optional";
 		ServerSide = "optional";
 		string body = api.GetModDescriptionAsync(mod.Id).Result.Data;

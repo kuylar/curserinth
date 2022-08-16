@@ -22,10 +22,10 @@ public static class CategoryMapping
 		GenericListResponse<Category> mapcats = await api.GetCategoriesAsync(432, 17);
 		GenericListResponse<Category> rpcats = await api.GetCategoriesAsync(432, 12);
 
-		ModCategoriesMapping = modcats.Data.ToDictionary(x => x.Slug, x => x.ClassId!.Value);
-		ModpackCategoriesMapping = mpcats.Data.ToDictionary(x => x.Slug, x => x.ClassId!.Value);
-		MapCategoriesMapping = mapcats.Data.ToDictionary(x => x.Slug, x => x.ClassId!.Value);
-		ResourcePackCategoriesMapping = rpcats.Data.ToDictionary(x => x.Slug, x => x.ClassId!.Value);
+		ModCategoriesMapping = modcats.Data.ToDictionary(Utils.GetCategoryName, x => x.ClassId!.Value);
+		ModpackCategoriesMapping = mpcats.Data.ToDictionary(Utils.GetCategoryName, x => x.ClassId!.Value);
+		MapCategoriesMapping = mapcats.Data.ToDictionary(Utils.GetCategoryName, x => x.ClassId!.Value);
+		ResourcePackCategoriesMapping = rpcats.Data.ToDictionary(Utils.GetCategoryName, x => x.ClassId!.Value);
 		
 		ModCategories = modcats.Data;
 		ModpackCategories = mpcats.Data;

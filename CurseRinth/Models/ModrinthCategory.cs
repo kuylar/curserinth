@@ -16,7 +16,7 @@ public class ModrinthCategory
 	{
 		Icon =
 			$"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><image x=\"0\" y=\"0\" width=\"24\" height=\"24\" xlink:href=\"{category.IconUrl}\"/></svg>";
-		Name = category.Slug;
+		Name = Utils.GetCategoryName(category);
 		ProjectType = projectType;
 	}
 }
