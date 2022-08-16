@@ -123,6 +123,8 @@ public class ProjectsController : Controller
 			Response.StatusCode = 404;
 			return null!;
 		}
+		//todo: fix this endpoint!!
+		return new ModrinthDependencies(new List<ModrinthProject>(), new List<ModrinthVersion>());
 
 		GenericResponse<Mod> projectResponse = await ApiClient.GetModAsync(cfId);
 		Mod project = projectResponse.Data;
