@@ -32,15 +32,14 @@ public class TagsController : Controller
 
 	[HttpGet]
 	[Route("loader")]
-	public async Task<IEnumerable<ModrinthLoader>> GetLoaders()
-	{
-		if (ModLoaderCache is null)
+	public IEnumerable<ModrinthLoader> GetLoaders() =>
+		new[]
 		{
-			GenericListResponse<MinecraftModloaderInfoListItem>? loaders = await ApiClient.GetMinecraftModloaders(includeAll: true);
-			ModLoaderCache = loaders.Data.DistinctBy(x => x.Type).Select(x => new ModrinthLoader(x));
-		}
-		return ModLoaderCache;
-	}
+			ModrinthLoader.Forge,
+			ModrinthLoader.Fabric,
+			ModrinthLoader.Quilt,
+			//ModrinthLoader.LiteLoader
+		};
 
 	[HttpGet]
 	[Route("game_version")]
