@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using CurseForge.APIClient.Models.Enums;
 using CurseForge.APIClient.Models.Minecraft;
+using CurseForge.APIClient.Models.Mods;
 
 namespace CurseRinth.Models;
 
@@ -25,11 +26,30 @@ public class ModrinthLoader
 		[CoreModloaderType.LiteLoader] = "<svg clip-rule=\"evenodd\" fill-rule=\"evenodd\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-miterlimit=\"1.5\" version=\"1.1\" viewBox=\"0 0 24 24\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\"><rect width=\"24\" height=\"24\" fill=\"none\"/><path d=\"m3.924 21.537s3.561-1.111 8.076-6.365c2.544-2.959 2.311-1.986 4-4.172\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2px\"/><path d=\"m7.778 19s1.208-0.48 4.222 0c2.283 0.364 6.037-4.602 6.825-6.702 1.939-5.165 0.894-10.431 0.894-10.431s-4.277 4.936-6.855 7.133c-5.105 4.352-6.509 11-6.509 11\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2px\"/></svg>",
 	};
 
+	public static readonly ModrinthLoader Forge = new(CoreModloaderType.Forge);
+	public static readonly ModrinthLoader Fabric = new(CoreModloaderType.Fabric);
+	public static readonly ModrinthLoader Quilt = new(CoreModloaderType.Quilt);
+	public static readonly ModrinthLoader LiteLoader = new(CoreModloaderType.LiteLoader);
+
 	public ModrinthLoader(MinecraftModloaderInfoListItem modLoader)
 	{
 		Icon = ModrinthSvgs.TryGetValue(modLoader.Type, out string? svg)
 			? svg
 			: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"></svg>";
 		Name = modLoader.Type.ToString().ToLower();
+	}
+
+	public ModrinthLoader(CoreModloaderType type)
+	{
+		Icon = ModrinthSvgs.TryGetValue(type, out string? svg)
+			? svg
+			: "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"></svg>";
+		Name = type.ToString().ToLower();
+	}
+
+	public ModrinthLoader(string icon, string name)
+	{
+		Icon = icon;
+		Name = name;
 	}
 }
