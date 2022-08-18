@@ -6,6 +6,7 @@ using CurseForge.APIClient.Models.Files;
 using CurseForge.APIClient.Models.Mods;
 using CurseRinth.Models;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace CurseRinth.Controllers.V2;
 
@@ -123,14 +124,12 @@ public class ProjectsController : Controller
 			Response.StatusCode = 404;
 			return null!;
 		}
-		//todo: fix this endpoint!!
-		return new ModrinthDependencies(new List<ModrinthProject>(), new List<ModrinthVersion>());
 
 		GenericResponse<Mod> projectResponse = await ApiClient.GetModAsync(cfId);
 		Mod project = projectResponse.Data;
 		Slug.SaveId(project);
-		List<FileDependency> dependencies = project.LatestFiles.Last().Dependencies;
-		
+		IEnumerable<FileDependency> dependencies = project.LatestFiles.Last().Dependencies
+			.Where(x => x.RelationType == FileRelationType.RequiredDependency).ToArray();
 
 		GenericListResponse<Mod> projectsResponse = await ApiClient.GetModsByIdListAsync(new GetModsByIdsListRequestBody
 		{
@@ -140,7 +139,6 @@ public class ProjectsController : Controller
 		List<ModrinthProject> projects = projectsResponse.Data.Select(x => new ModrinthProject(x, ApiClient)).ToList();
 		List<ModrinthVersion> versions = 
 			(from d in dependencies
-			where d.RelationType == FileRelationType.RequiredDependency
 			select projectsResponse.Data.FirstOrDefault(x => x.Id == d.ModId)
 			into dependentMod
 			select new ModrinthVersion(dependentMod, dependentMod.LatestFiles.Last(), ApiClient)).ToList();
