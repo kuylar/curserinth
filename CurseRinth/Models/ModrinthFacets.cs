@@ -8,7 +8,16 @@ namespace CurseRinth.Models;
 [TypeConverter(typeof(ModrinthFacetsConverter))]
 public class ModrinthFacets
 {
+	private static string[] _validLoaders = {
+		"forge",
+		"fabric",
+		"quilt",
+		"liteloader",
+		"cauldron"
+	};
+	
 	public List<string> Categories { get; } = new();
+	public List<string> Loaders { get; } = new();
 	public List<string> Versions { get; } = new();
 	public List<string> Licenses { get; } = new();
 	public List<string> ProjectTypes { get; } = new();
@@ -29,6 +38,8 @@ public class ModrinthFacets
 				switch (key)
 				{
 					case "categories":
+						if (_validLoaders.Contains(value))
+							result.Loaders.Add(value);
 						result.Categories.Add(value);
 						break;
 					case "versions":
@@ -70,17 +81,17 @@ public class ModrinthFacets
 
 	public ModLoaderType? GetModLoader()
 	{
-		if (Categories.Contains("fabric"))
-			return ModLoaderType.Fabric;
-		if (Categories.Contains("forge"))
-			return ModLoaderType.Forge;
-		if (Categories.Contains("cauldron"))
-			return ModLoaderType.Cauldron;
-		if (Categories.Contains("liteloader"))
-			return ModLoaderType.LiteLoader;
-		if (Categories.Contains("quilt"))
-			return ModLoaderType.Quilt;
-		return ModLoaderType.Any;
+		if (Loaders.Count != 1)
+			return ModLoaderType.Any;
+		return Loaders[0] switch
+		{
+			"fabric" => (ModLoaderType)4,
+			"forge" => ModLoaderType.Forge,
+			"cauldron" => ModLoaderType.Cauldron,
+			"liteloader" => ModLoaderType.LiteLoader,
+			"quilt" => ModLoaderType.Quilt,
+			_ => ModLoaderType.Any
+		};
 	}
 }
 
