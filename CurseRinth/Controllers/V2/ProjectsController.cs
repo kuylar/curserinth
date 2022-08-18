@@ -47,7 +47,7 @@ public class ProjectsController : Controller
 			}).ToList(),
 			(int)mods.Pagination.Index,
 			(int)mods.Pagination.PageSize,
-			(int)mods.Pagination.ResultCount,
+			(int)mods.Pagination.TotalCount,
 			comment.Length > 0 ? comment.ToString() : null
 		);
 	}
