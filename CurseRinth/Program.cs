@@ -10,9 +10,14 @@ LoggerConfiguration loggerConfiguration = new LoggerConfiguration()
 	.WriteTo.Console(LogEventLevel.Information);
 Log.Logger = loggerConfiguration.CreateLogger();
 
-ApiClient apiClient = new(Environment.GetEnvironmentVariable("CURSEFORGE_APIKEY") ??
-                          throw new ArgumentNullException("CFApiKey",
-	                          "Please set the CURSEFORGE_APIKEY environment variable"), "noreply@gmail.com");
+ApiClient apiClient = new(
+	Environment.GetEnvironmentVariable("CURSEFORGE_APIKEY") ??
+	throw new ArgumentNullException("CFApiKey",
+		"Please set the CURSEFORGE_APIKEY environment variable"),
+	Environment.GetEnvironmentVariable("CURSEFORGE_CONTACTEMAIL") ??
+	throw new ArgumentNullException("CFContactEmail",
+		"Please set the CURSEFORGE_CONTACTEMAIL environment variable")
+);
 Log.Information("Loading categories from CurseForge");
 CategoryMapping.Set(apiClient).Wait();
 Log.Information("Loaded categories");
