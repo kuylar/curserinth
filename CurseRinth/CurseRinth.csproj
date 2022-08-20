@@ -22,4 +22,8 @@
       <None Remove=".dockerignore" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\.NET-APIClient-master\CurseForge.APIClient.csproj" />
+    </ItemGroup>
+
 </Project>
