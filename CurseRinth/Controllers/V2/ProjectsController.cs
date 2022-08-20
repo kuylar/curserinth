@@ -150,8 +150,9 @@ public class ProjectsController : Controller
 
 			return new ModrinthDependencies(projects, versions);
 		}
-		catch
+		catch (Exception e)
 		{
+			Log.Error(e, "Failed to load dependencies for project {0}", cfId);
 			return new ModrinthDependencies(new List<ModrinthProject>(), new List<ModrinthVersion>());
 		}
 	}
