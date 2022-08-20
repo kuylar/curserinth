@@ -40,7 +40,8 @@ public class ModrinthFacets
 					case "categories":
 						if (_validLoaders.Contains(value))
 							result.Loaders.Add(value);
-						result.Categories.Add(value);
+						else
+							result.Categories.Add(value);
 						break;
 					case "versions":
 						result.Versions.Add(value);
