@@ -125,24 +125,34 @@ public class ProjectsController : Controller
 			return null!;
 		}
 
-		GenericResponse<Mod> projectResponse = await ApiClient.GetModAsync(cfId);
-		Mod project = projectResponse.Data;
-		Slug.SaveId(project);
-		IEnumerable<FileDependency> dependencies = project.LatestFiles.Last().Dependencies
-			.Where(x => x.RelationType == FileRelationType.RequiredDependency).ToArray();
-
-		GenericListResponse<Mod> projectsResponse = await ApiClient.GetModsByIdListAsync(new GetModsByIdsListRequestBody
+		//fixme: this endpoint sometimes throws a 500, find the reason and fix it
+		try
 		{
-			ModIds = dependencies.Select(x => x.ModId).ToList()
-		});
+			GenericResponse<Mod> projectResponse = await ApiClient.GetModAsync(cfId);
+			Mod project = projectResponse.Data;
+			Slug.SaveId(project);
+			IEnumerable<FileDependency> dependencies = project.LatestFiles.Last().Dependencies
+				.Where(x => x.RelationType == FileRelationType.RequiredDependency).ToArray();
 
-		List<ModrinthProject> projects = projectsResponse.Data.Select(x => new ModrinthProject(x, ApiClient)).ToList();
-		List<ModrinthVersion> versions = 
-			(from d in dependencies
-			select projectsResponse.Data.FirstOrDefault(x => x.Id == d.ModId)
-			into dependentMod
-			select new ModrinthVersion(dependentMod, dependentMod.LatestFiles.Last(), ApiClient)).ToList();
+			GenericListResponse<Mod> projectsResponse = await ApiClient.GetModsByIdListAsync(
+				new GetModsByIdsListRequestBody
+				{
+					ModIds = dependencies.Select(x => x.ModId).ToList()
+				});
 
-		return new ModrinthDependencies(projects, versions);
+			List<ModrinthProject> projects =
+				projectsResponse.Data.Select(x => new ModrinthProject(x, ApiClient)).ToList();
+			List<ModrinthVersion> versions =
+				(from d in dependencies
+					select projectsResponse.Data.FirstOrDefault(x => x.Id == d.ModId)
+					into dependentMod
+					select new ModrinthVersion(dependentMod, dependentMod.LatestFiles.Last(), ApiClient)).ToList();
+
+			return new ModrinthDependencies(projects, versions);
+		}
+		catch
+		{
+			return new ModrinthDependencies(new List<ModrinthProject>(), new List<ModrinthVersion>());
+		}
 	}
 }
