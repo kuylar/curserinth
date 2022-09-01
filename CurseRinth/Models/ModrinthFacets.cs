@@ -16,6 +16,18 @@ public class ModrinthFacets
 		"cauldron"
 	};
 	
+	private static string[] _pluginLoaders =
+	{
+		"bukkit", 
+		"spigot", 
+		"paper", 
+		"purpur", 
+		"sponge", 
+		"bungeecord", 
+		"waterfall", 
+		"velocity"
+	};
+	
 	public List<string> Categories { get; } = new();
 	public List<string> Loaders { get; } = new();
 	public List<string> Versions { get; } = new();
@@ -64,8 +76,11 @@ public class ModrinthFacets
 		return Categories.Count > 1 || Versions.Count > 1 || Licenses.Count > 1 || ProjectTypes.Count > 1;
 	}
 
-	public uint GetProjectType() =>
-		ProjectTypes.FirstOrDefault() switch
+	public uint GetProjectType()
+	{
+		if (IsPlugin())
+			return 5;
+		return ProjectTypes.FirstOrDefault() switch
 		{
 			"modpack" => 4471,
 			"mod" => 6,
@@ -74,9 +89,14 @@ public class ModrinthFacets
 			"resourcepack" => 12,
 			var _ => 6
 		};
+	}
 
-	public uint GetCategory() => 
-		CategoryMapping.GetInt(GetProjectType(), Categories.FirstOrDefault());
+	private bool IsPlugin() => 
+		Categories.Any(x => _pluginLoaders.Contains(x));
+
+	public uint GetCategory() =>
+		CategoryMapping.GetInt(GetProjectType(),
+			Categories.FirstOrDefault(x => !_validLoaders.Contains(x) && !_pluginLoaders.Contains(x)));
 
 	public string? GetGameVersion() => Versions.FirstOrDefault();
 
