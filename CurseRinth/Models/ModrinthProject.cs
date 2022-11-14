@@ -131,7 +131,7 @@ public class ModrinthProject
 		Approved = mod.DateCreated.ToString("O");
 		Followers = mod.ThumbsUpCount;
 		Status = "approved";
-		License = new ModrinthLicense();
+		License = Utils.GetLicenseFromMod(mod.ClassId!.Value, Id, Slug);
 		Versions = mod.LatestFiles.Select(x => x.Id.ToString()).ToArray();
 		Gallery = mod.Screenshots.Select(x => new ModrinthImage(x)).ToArray();
 	}
