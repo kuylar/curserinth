@@ -95,7 +95,7 @@ public class ModrinthProject
 
 	public ModrinthProject(Mod mod, ApiClient api)
 	{
-		Slug = mod.Slug;
+		Slug = SlugMapper.FormatSlug(mod);
 		Title = mod.Name;
 		Description = mod.Summary;
 		Categories = mod.Categories.Select(Utils.GetCategoryName).ToArray();

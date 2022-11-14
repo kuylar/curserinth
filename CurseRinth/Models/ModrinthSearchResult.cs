@@ -62,7 +62,7 @@ public class ModrinthSearchResult
 
 	public ModrinthSearchResult(Mod mod)
 	{
-		Slug = mod.Slug;
+		Slug = SlugMapper.FormatSlug(mod);
 		Title = mod.Name;
 		Description = mod.Summary;
 		Categories = mod.Categories.Select(Utils.GetCategoryName).ToArray();
