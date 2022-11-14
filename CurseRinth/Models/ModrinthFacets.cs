@@ -18,16 +18,16 @@ public class ModrinthFacets
 	
 	private static string[] _pluginLoaders =
 	{
-		"bukkit", 
-		"spigot", 
-		"paper", 
-		"purpur", 
-		"sponge", 
-		"bungeecord", 
-		"waterfall", 
-		"velocity"
+		"'bukkit'", 
+		"'spigot'", 
+		"'paper'", 
+		"'purpur'", 
+		"'sponge'", 
+		"'bungeecord'", 
+		"'waterfall'", 
+		"'velocity'"
 	};
-	
+
 	public List<string> Categories { get; } = new();
 	public List<string> Loaders { get; } = new();
 	public List<string> Versions { get; } = new();
@@ -91,8 +91,7 @@ public class ModrinthFacets
 		};
 	}
 
-	private bool IsPlugin() => 
-		Categories.Any(x => _pluginLoaders.Contains(x));
+	private bool IsPlugin() => Categories.Contains("'bukkit'");
 
 	public uint GetCategory() =>
 		CategoryMapping.GetInt(GetProjectType(),
