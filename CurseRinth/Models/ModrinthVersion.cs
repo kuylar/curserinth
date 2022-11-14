@@ -74,7 +74,7 @@ public class ModrinthVersion
 	{
 		Name = project.Name;
 		VersionNumber = file.Id.ToString();
-		string changelog = api.GetModFileChangelogAsync(project.Id, file.Id).Result.Data;
+		string changelog = "";//api.GetModFileChangelogAsync(project.Id, file.Id).Result.Data;
 		try
 		{
 			Changelog = new Converter().Convert(changelog).Replace("\r\n", "\n");
