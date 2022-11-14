@@ -32,7 +32,17 @@ public class VersionsController : Controller
 
 		GenericResponse<Mod>? projectResponse = await Api.GetModAsync(cfId);
 		Mod project = projectResponse.Data;
-		GenericListResponse<File> files = await Api.GetModFilesAsync(cfId, pageSize: (uint)(featured ? 3 : 20));
-		return files.Data.Select(x => new ModrinthVersion(project, x, Api));
+		GenericListResponse<File> files = await Api.GetModFilesAsync(cfId, pageSize: 20);
+		return featured
+			? files.Data
+				.OrderBy(x => x.ReleaseType)
+				.DistinctBy(x => x.GameVersions.First(y =>
+					!y.Contains("forge", StringComparison.OrdinalIgnoreCase) &&
+					!y.Contains("fabric", StringComparison.OrdinalIgnoreCase) &&
+					!y.Contains("quilt", StringComparison.OrdinalIgnoreCase)))
+				.Take(3)
+				.Select(x => new ModrinthVersion(project, x, Api))
+			: files.Data
+				.Select(x => new ModrinthVersion(project, x, Api));
 	}
 }
