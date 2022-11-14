@@ -9,7 +9,7 @@ namespace CurseRinth;
 public class SlugMapper
 {
 	public ApiClient ApiClient;
-	private Dictionary<string, uint> SlugToIdMapping = new();
+	private Dictionary<(ProjectType projectType, string slug), uint> SlugToIdMapping = new();
 
 	public SlugMapper(ApiClient apiClient) => ApiClient = apiClient;
 
@@ -17,38 +17,63 @@ public class SlugMapper
 	{
 		if (uint.TryParse(slug, out id))
 			return true;
-		if (GetId(slug) != null)
+
+		string[] parts = slug.Split("__");
+		ProjectType type = parts[0] switch
 		{
-			id = GetId(slug)!.Value;
+			"mod" => ProjectType.Mod,
+			"modpack" => ProjectType.Modpack,
+			"plugin" => ProjectType.Plugin,
+			"respack" => ProjectType.ResourcePack,
+			var _ => throw new ArgumentOutOfRangeException()
+		};
+		
+		if (GetId(type, parts[1]) != null)
+		{
+			id = GetId(type, parts[1])!.Value;
 			return true;
 		}
 
-		if (GetIdFromCurseForge(slug).Result != null)
+		if (GetIdFromCurseForge(type, parts[1]).Result != null)
 		{
-			id = GetId(slug)!.Value;
+			id = GetId(type, slug)!.Value;
 			return true;
 		}
 
 		return false;
 	}
 
-	public async Task<uint?> GetIdFromCurseForge(string slug)
+	public async Task<uint?> GetIdFromCurseForge(ProjectType projectType, string slug)
 	{
-		GenericListResponse<Mod> response = await ApiClient.SearchModsAsync(432, slug: slug);
+		GenericListResponse<Mod> response = await ApiClient.SearchModsAsync(432, slug: slug, classId: (uint)projectType);
 		uint? id = response.Data.FirstOrDefault()?.Id;
-		if (id is not null) SaveId(slug, id.Value);
+		if (id is not null) SaveId(projectType, slug, id.Value);
 		return id;
 	}
-	
-	public uint? GetId(string slug) => SlugToIdMapping.TryGetValue(slug, out uint id) ? id : null;
 
-	public void SaveId(string slug, uint id)
+	public uint? GetId(ProjectType projectType, string slug) => SlugToIdMapping.TryGetValue((projectType, slug), out uint id) ? id : null;
+
+	public void SaveId(uint projectType, string slug, uint id) =>
+		SaveId((ProjectType)projectType, slug, id);
+
+	public void SaveId(ProjectType projectType, string slug, uint id)
 	{
-		if (SlugToIdMapping.ContainsKey(slug)) SlugToIdMapping[slug] = id;
-		else SlugToIdMapping.Add(slug, id);
+		if (SlugToIdMapping.ContainsKey((projectType, slug))) SlugToIdMapping[(projectType, slug)] = id;
+		else SlugToIdMapping.Add((projectType, slug), id);
 	}
 
-	public void SaveId(Mod project) => SaveId(project.Slug, project.Id);
-	public void SaveId(ModrinthProject project) => SaveId(project.Slug, uint.Parse(project.Id));
-	public void SaveId(ModrinthSearchResult project) => SaveId(project.Slug, uint.Parse(project.Id));
+	public void SaveId(Mod project) => SaveId(project.ClassId!.Value, project.Slug, project.Id);
+
+	public static string FormatSlug(Mod mod)
+	{
+		string type = mod.ClassId switch
+		{
+			5 => "plugin",
+			6 => "mod",
+			12 => "respack",
+			4471 => "modpack",
+			_ => throw new ArgumentOutOfRangeException()
+		}; 
+		return $"{type}__{mod.Slug}";
+	}
 }

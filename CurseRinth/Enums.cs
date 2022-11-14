@@ -8,3 +8,11 @@ public enum SearchIndex
 	NEWEST,
 	UPDATED
 }
+
+public enum ProjectType
+{
+	Mod = 6,
+	Modpack = 4471,
+	ResourcePack = 12,
+	Plugin = 5,
+}
