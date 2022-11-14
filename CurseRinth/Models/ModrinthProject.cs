@@ -118,7 +118,9 @@ public class ModrinthProject
 		DonationUrls = Array.Empty<object>();
 		ProjectType = mod.ClassId switch
 		{
+			5 => "mod",
 			6 => "mod",
+			12 => "resourcepack",
 			4471 => "modpack",
 			var _ => ""
 		};
