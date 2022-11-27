@@ -36,7 +36,7 @@ public class ProjectsController : Controller
 			comment.AppendLine(
 				"WARN: CurseForge API does not support AND/OR filters in their search, using only the first facets");
 
-		GenericListResponse<Mod> mods = await ApiClient.SearchModsAsync(432, facets.GetProjectType(), facets.GetCategory(), facets.GetGameVersion(),
+		GenericListResponse<Mod> mods = await ApiClient.SearchModsAsync(432, facets.GetProjectType(), (uint?)facets.GetCategory(), facets.GetGameVersion(),
 			query, Utils.GetSortField(index), ModsSearchSortOrder.Descending, facets.GetModLoader(), index: offset, pageSize: Math.Clamp(limit, 0, 50));
 
 		return new ModrinthPagination<ModrinthSearchResult>(
