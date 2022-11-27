@@ -5,10 +5,10 @@ namespace CurseRinth;
 
 public static class CategoryMapping
 {
-	private static Dictionary<string, uint> ModCategoriesMapping;
-	private static Dictionary<string, uint> ModpackCategoriesMapping;
-	private static Dictionary<string, uint> MapCategoriesMapping;
-	private static Dictionary<string, uint> ResourcePackCategoriesMapping;
+	private static Dictionary<string, int> ModCategoriesMapping;
+	private static Dictionary<string, int> ModpackCategoriesMapping;
+	private static Dictionary<string, int> MapCategoriesMapping;
+	private static Dictionary<string, int> ResourcePackCategoriesMapping;
 
 	public static List<Category> ModCategories;
 	public static List<Category> ModpackCategories;
@@ -33,7 +33,7 @@ public static class CategoryMapping
 		ResourcePackCategories = rpcats.Data;
 	}
 
-	public static uint GetInt(uint classId, string? slug)
+	public static int GetInt(uint classId, string? slug)
 	{
 		if (slug is null) return 0;
 		try

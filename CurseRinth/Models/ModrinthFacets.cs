@@ -93,7 +93,7 @@ public class ModrinthFacets
 
 	private bool IsPlugin() => Categories.Contains("'bukkit'");
 
-	public uint GetCategory() =>
+	public int GetCategory() =>
 		CategoryMapping.GetInt(GetProjectType(),
 			Categories.FirstOrDefault(x => !_validLoaders.Contains(x) && !_pluginLoaders.Contains(x)));
 
