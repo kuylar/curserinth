@@ -8,23 +8,24 @@ namespace CurseRinth.Models;
 [TypeConverter(typeof(ModrinthFacetsConverter))]
 public class ModrinthFacets
 {
-	private static string[] _validLoaders = {
+	private static string[] _validLoaders =
+	{
 		"forge",
 		"fabric",
 		"quilt",
 		"liteloader",
 		"cauldron"
 	};
-	
+
 	private static string[] _pluginLoaders =
 	{
-		"'bukkit'", 
-		"'spigot'", 
-		"'paper'", 
-		"'purpur'", 
-		"'sponge'", 
-		"'bungeecord'", 
-		"'waterfall'", 
+		"'bukkit'",
+		"'spigot'",
+		"'paper'",
+		"'purpur'",
+		"'sponge'",
+		"'bungeecord'",
+		"'waterfall'",
 		"'velocity'"
 	};
 
@@ -73,7 +74,7 @@ public class ModrinthFacets
 
 	public bool HasMultipleOfAnything()
 	{
-		return Categories.Count > 1 || Versions.Count > 1 || Licenses.Count > 1 || ProjectTypes.Count > 1;
+		return Versions.Count > 1;
 	}
 
 	public uint GetProjectType()
@@ -97,6 +98,12 @@ public class ModrinthFacets
 		CategoryMapping.GetInt(GetProjectType(),
 			Categories.FirstOrDefault(x => !_validLoaders.Contains(x) && !_pluginLoaders.Contains(x)));
 
+	public uint[] GetCategories() =>
+		Categories
+			.Where(x => !_validLoaders.Contains(x) && !_pluginLoaders.Contains(x))
+			.Select(x => (uint)CategoryMapping.GetInt(GetProjectType(), x.Substring(1, x.Length - 2)))
+			.ToArray();
+
 	public string? GetGameVersion() => Versions.FirstOrDefault();
 
 	public ModLoaderType? GetModLoader()
@@ -113,6 +120,24 @@ public class ModrinthFacets
 			_ => ModLoaderType.Any
 		};
 	}
+
+	public ModLoaderType[] GetModLoaders() =>
+		Loaders.Count is 0 or 6
+			? Array.Empty<ModLoaderType>()
+			: Loaders
+				.Select(x =>
+				{
+					return x switch
+					{
+						"fabric" => (ModLoaderType)4,
+						"forge" => ModLoaderType.Forge,
+						"cauldron" => ModLoaderType.Cauldron,
+						"liteloader" => ModLoaderType.LiteLoader,
+						"quilt" => ModLoaderType.Quilt,
+						_ => ModLoaderType.Any
+					};
+				})
+				.ToArray();
 }
 
 public class ModrinthFacetsConverter : TypeConverter

@@ -64,9 +64,24 @@ public class SlugMapper
 
 	public void SaveId(Mod project) => SaveId(project.ClassId!.Value, project.Slug, project.Id);
 
+	public void SaveId(BetaMod project) => SaveId((uint)project.Class.Id, project.Slug, (uint)project.Id);
+
 	public static string FormatSlug(Mod mod)
 	{
 		string type = mod.ClassId switch
+		{
+			5 => "plugin",
+			6 => "mod",
+			12 => "respack",
+			4471 => "modpack",
+			_ => throw new ArgumentOutOfRangeException()
+		}; 
+		return $"{type}__{mod.Slug}";
+	}
+
+	public static string? FormatSlug(BetaMod mod)
+	{
+		string type = mod.Class.Id switch
 		{
 			5 => "plugin",
 			6 => "mod",

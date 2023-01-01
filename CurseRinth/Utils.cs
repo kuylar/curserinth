@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
+using CurseForge.APIClient;
 using CurseForge.APIClient.Models;
 using CurseForge.APIClient.Models.Mods;
 using CurseRinth.Models;
@@ -10,6 +12,7 @@ public static class Utils
 {
 	public static Regex LinkoutRegex = new("\\(\\/linkout\\?remoteUrl=(.+?)\\)");
 	private static HtmlWeb _web = new();
+	private static HttpClient _client = new();
 
 	// isnt 1:1 but it works
 	public static ModsSearchSortField GetSortField(SearchIndex index) =>
@@ -24,6 +27,8 @@ public static class Utils
 		};
 
 	public static string GetCategoryName(Category category) => GetCategoryName(category.Name);
+
+	public static string GetCategoryName(Class category) => GetCategoryName(category.Name);
 	public static string GetCategoryName(string name) => name.Replace(' ', '-').ToLower();
 
 	public static ModrinthLicense GetLicenseFromMod(uint projectType, string id, string slug)
@@ -45,5 +50,30 @@ public static class Utils
 		{
 			return new ModrinthLicense("CUSTOM", "Unknown License", $"https://www.curseforge.com/project/{id}/license");
 		}
+	}
+	
+	public static async Task<GenericListResponse<BetaMod>> BetaSearch(this ApiClient client, 
+		uint gameId, uint? classId = null, uint[]? categoryIds = null, string? gameVersion = null, string? searchFilter = null,
+		ModsSearchSortField? sortField = null, ModsSearchSortOrder sortOrder = ModsSearchSortOrder.Descending, ModLoaderType[]? modLoaderTypes = null,
+		string? slug = null, uint? gameVersionTypeId = null, uint? index = null, uint? pageSize = null)
+	{
+		StringBuilder url = new("https://beta.curseforge.com/api/v1/mods/search?");
+		url
+			.Append("gameId=" + gameId)
+			.Append("&index=" + index)
+			.Append("&classId=" + classId)
+			.Append("&filterText=" + searchFilter)
+			.Append("&gameVersion=" + gameVersion)
+			.Append("&pageSize=" + pageSize)
+			.Append("&sortField=" + (int)(sortField ?? 0))
+			.Append("&sortOrder=" + (int)sortOrder);
+		for (int i = 0; i < categoryIds?.Length; i++) 
+			url.Append($"&categoryIds[{i}]={categoryIds[i]}");
+		for (int i = 0; i < modLoaderTypes?.Length; i++) 
+			url.Append($"&gameFlavors[{i}]={modLoaderTypes[i]}");
+
+		return await client.HandleResponseMessage<GenericListResponse<BetaMod>>(
+			await _client.GetAsync(url.ToString())
+		);
 	}
 }
