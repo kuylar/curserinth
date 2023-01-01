@@ -132,7 +132,7 @@ namespace CurseForge.APIClient
             );
         }
 
-        internal async Task<T> HandleResponseMessage<T>(HttpResponseMessage result)
+        public async Task<T> HandleResponseMessage<T>(HttpResponseMessage result)
         {
             if (!result.IsSuccessStatusCode)
             {

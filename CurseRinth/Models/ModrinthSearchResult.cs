@@ -88,4 +88,33 @@ public class ModrinthSearchResult
 		LatestVersion = mod.LatestFiles.Last().Id.ToString();
 		Gallery = mod.Screenshots.Select(x => new ModrinthImage(x)).ToArray();
 	}
+
+	public ModrinthSearchResult(BetaMod mod)
+	{
+		Slug = SlugMapper.FormatSlug(mod);
+		Title = mod.Name;
+		Description = mod.Summary;
+		Categories = mod.Categories.Select(Utils.GetCategoryName).ToArray();
+		DisplayCategories = mod.Categories.Select(Utils.GetCategoryName).ToArray();
+		ClientSide = "optional";
+		ServerSide = "optional";
+		ProjectType = mod.Class.Id switch
+		{
+			5 => "mod",
+			6 => "mod",
+			12 => "resourcepack",
+			4471 => "modpack",
+			var _ => ""
+		};
+		Downloads = mod.Downloads;
+		IconUrl = mod.AvatarUrl.ToString();
+		Id = mod.Id.ToString();
+		Author = mod.Author;
+		DateCreated = DateTimeOffset.FromUnixTimeSeconds(mod.CreationDate).ToString("O");
+		DateModified = DateTimeOffset.FromUnixTimeSeconds(mod.UpdateDate).ToString("O");
+		Followers = 0;
+		License = new ModrinthLicense("CUSTOM", mod.LicenseType, $"https://www.curseforge.com/project/{Id}/license");
+		LatestVersion = mod.MainFile.Id.ToString();
+		Gallery = Array.Empty<ModrinthImage>();
+	}
 }
