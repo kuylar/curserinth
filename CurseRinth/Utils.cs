@@ -57,6 +57,8 @@ public static class Utils
 		ModsSearchSortField? sortField = null, ModsSearchSortOrder sortOrder = ModsSearchSortOrder.Descending, ModLoaderType[]? modLoaderTypes = null,
 		string? slug = null, uint? gameVersionTypeId = null, uint? index = null, uint? pageSize = null)
 	{
+		categoryIds = categoryIds?.Where(x => x != 0).ToArray();
+		modLoaderTypes = modLoaderTypes?.Where(x => x != 0).ToArray();
 		StringBuilder url = new("https://beta.curseforge.com/api/v1/mods/search?");
 		url
 			.Append("gameId=" + gameId)
