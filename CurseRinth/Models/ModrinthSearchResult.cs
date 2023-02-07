@@ -114,7 +114,7 @@ public class ModrinthSearchResult
 		DateModified = DateTimeOffset.FromUnixTimeSeconds(mod.UpdateDate).ToString("O");
 		Followers = 0;
 		License = new ModrinthLicense("CUSTOM", mod.LicenseType, $"https://www.curseforge.com/project/{Id}/license");
-		LatestVersion = mod.MainFile.Id.ToString();
+		LatestVersion = null;
 		Gallery = Array.Empty<ModrinthImage>();
 	}
 }
