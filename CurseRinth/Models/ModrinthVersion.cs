@@ -116,5 +116,7 @@ public class ModrinthVersion
 				Size = file.FileLength
 			}
 		};
+		
+		ChangelogUrl = $"https://curserinth-api.kuylar.dev/changelog/{project.Id}/{file.Id}";
 	}
 }
