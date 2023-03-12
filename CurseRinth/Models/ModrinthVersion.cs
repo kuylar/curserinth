@@ -72,7 +72,7 @@ public class ModrinthVersion
 
 	public ModrinthVersion(Mod project, File file, ApiClient api)
 	{
-		Name = file.FileName;
+		Name = file.DisplayName;
 		VersionNumber = file.Id.ToString();
 		string changelog = "";//api.GetModFileChangelogAsync(project.Id, file.Id).Result.Data;
 		try
