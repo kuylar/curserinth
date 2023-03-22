@@ -77,7 +77,7 @@ public class ModrinthFacets
 		return Versions.Count > 1;
 	}
 
-	public uint GetProjectType()
+	public int GetProjectType()
 	{
 		if (IsPlugin())
 			return 5;
@@ -98,10 +98,10 @@ public class ModrinthFacets
 		CategoryMapping.GetInt(GetProjectType(),
 			Categories.FirstOrDefault(x => !_validLoaders.Contains(x) && !_pluginLoaders.Contains(x)));
 
-	public uint[] GetCategories() =>
+	public int[] GetCategories() =>
 		Categories
 			.Where(x => !_validLoaders.Contains(x) && !_pluginLoaders.Contains(x))
-			.Select(x => (uint)CategoryMapping.GetInt(GetProjectType(), x.Substring(1, x.Length - 2)))
+			.Select(x => CategoryMapping.GetInt(GetProjectType(), x.Substring(1, x.Length - 2)))
 			.ToArray();
 
 	public string? GetGameVersion() => Versions.FirstOrDefault();

@@ -49,7 +49,7 @@ public class ModrinthSearchResult
 	public string DateModified { get; }
 
 	[JsonPropertyName("follows")]
-	public uint? Followers { get; }
+	public int? Followers { get; }
 
 	[JsonPropertyName("latest_version")]
 	public string LatestVersion { get; }

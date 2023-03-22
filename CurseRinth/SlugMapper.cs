@@ -9,13 +9,13 @@ namespace CurseRinth;
 public class SlugMapper
 {
 	public ApiClient ApiClient;
-	private Dictionary<(ProjectType projectType, string slug), uint> SlugToIdMapping = new();
+	private Dictionary<(ProjectType projectType, string slug), int> SlugToIdMapping = new();
 
 	public SlugMapper(ApiClient apiClient) => ApiClient = apiClient;
 
-	public bool TryGetId(string slug, out uint id)
+	public bool TryGetId(string slug, out int id)
 	{
-		if (uint.TryParse(slug, out id))
+		if (int.TryParse(slug, out id))
 			return true;
 
 		string[] parts = slug.Split("__");
@@ -34,29 +34,30 @@ public class SlugMapper
 			return true;
 		}
 
-		if (GetIdFromCurseForge(type, parts[1]).Result != null)
+		int? idFromCurseForge = GetIdFromCurseForge(type, parts[1]).Result;
+		if (idFromCurseForge != null)
 		{
-			id = GetId(type, slug)!.Value;
+			id = idFromCurseForge.Value;
 			return true;
 		}
 
 		return false;
 	}
 
-	public async Task<uint?> GetIdFromCurseForge(ProjectType projectType, string slug)
+	public async Task<int?> GetIdFromCurseForge(ProjectType projectType, string slug)
 	{
-		GenericListResponse<Mod> response = await ApiClient.SearchModsAsync(432, slug: slug, classId: (uint)projectType);
-		uint? id = response.Data.FirstOrDefault()?.Id;
+		GenericListResponse<Mod> response = await ApiClient.SearchModsAsync(432, slug: slug, classId: (int)projectType);
+		int? id = response.Data.FirstOrDefault()?.Id;
 		if (id is not null) SaveId(projectType, slug, id.Value);
 		return id;
 	}
 
-	public uint? GetId(ProjectType projectType, string slug) => SlugToIdMapping.TryGetValue((projectType, slug), out uint id) ? id : null;
+	public int? GetId(ProjectType projectType, string slug) => SlugToIdMapping.TryGetValue((projectType, slug), out int id) ? id : null;
 
-	public void SaveId(uint projectType, string slug, uint id) =>
+	public void SaveId(int projectType, string slug, int id) =>
 		SaveId((ProjectType)projectType, slug, id);
 
-	public void SaveId(ProjectType projectType, string slug, uint id)
+	public void SaveId(ProjectType projectType, string slug, int id)
 	{
 		if (SlugToIdMapping.ContainsKey((projectType, slug))) SlugToIdMapping[(projectType, slug)] = id;
 		else SlugToIdMapping.Add((projectType, slug), id);
@@ -64,7 +65,7 @@ public class SlugMapper
 
 	public void SaveId(Mod project) => SaveId(project.ClassId!.Value, project.Slug, project.Id);
 
-	public void SaveId(BetaMod project) => SaveId((uint)project.Class.Id, project.Slug, (uint)project.Id);
+	public void SaveId(BetaMod project) => SaveId((int)project.Class.Id, project.Slug, (int)project.Id);
 
 	public static string FormatSlug(Mod mod)
 	{

@@ -79,7 +79,7 @@ public class ModrinthProject
 	public string Updated { get; }
 
 	[JsonPropertyName("followers")]
-	public uint? Followers { get; }
+	public int? Followers { get; }
 
 	[JsonPropertyName("status")]
 	public string Status { get; }

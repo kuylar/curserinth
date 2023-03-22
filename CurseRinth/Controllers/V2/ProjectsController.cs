@@ -26,7 +26,7 @@ public class ProjectsController : Controller
 	[HttpGet]
 	[Route("search")]
 	public async Task<ModrinthPagination<ModrinthSearchResult>> Search(string? query = "", ModrinthFacets? facets = null,
-		SearchIndex index = SearchIndex.RELEVANCE, uint offset = 0, uint limit = 20, string? filters = null)
+		SearchIndex index = SearchIndex.RELEVANCE, int offset = 0, int limit = 20, string? filters = null)
 	{
 		facets ??= new ModrinthFacets();
 		StringBuilder comment = new();
@@ -58,7 +58,7 @@ public class ProjectsController : Controller
 	[Route("project/{slug}")]
 	public async Task<ModrinthProject> GetProject(string slug)
 	{
-		if (!Slug.TryGetId(slug, out uint cfId))
+		if (!Slug.TryGetId(slug, out int cfId))
 		{
 			Response.StatusCode = 404;
 			return null!;
@@ -76,10 +76,10 @@ public class ProjectsController : Controller
 	{
 		List<ModrinthProject> projects = new();
 		string[] realIds = JsonSerializer.Deserialize<string[]>(slugs)!;
-		List<uint> ids = new();
+		List<int> ids = new();
 		foreach (string id in realIds)
 		{
-			if (!Slug.TryGetId(id, out uint cfId))
+			if (!Slug.TryGetId(id, out int cfId))
 				continue;
 			ids.Add(cfId);
 		}
@@ -102,7 +102,7 @@ public class ProjectsController : Controller
 	[Route("project/{slug}/check")]
 	public async Task<Dictionary<string, string>> CheckSlugValidity(string slug)
 	{
-		if (!Slug.TryGetId(slug, out uint cfId))
+		if (!Slug.TryGetId(slug, out int cfId))
 		{
 			Response.StatusCode = 404;
 			return null!;
@@ -121,7 +121,7 @@ public class ProjectsController : Controller
 	[Route("project/{slug}/dependencies")]
 	public async Task<ModrinthDependencies> GetProjectDependencies(string slug)
 	{
-		if (!Slug.TryGetId(slug, out uint cfId))
+		if (!Slug.TryGetId(slug, out int cfId))
 		{
 			Response.StatusCode = 404;
 			return null!;

@@ -40,7 +40,7 @@ public class GeneralController : Controller
 
 	[Route("/changelog/{projectId}/{fileId}")]
 	[HttpGet]
-	public async Task<ContentResult> Changelog(uint projectId, uint fileId)
+	public async Task<ContentResult> Changelog(int projectId, int fileId)
 	{
 		GenericResponse<string> modFileChangelogAsync = await Api.GetModFileChangelogAsync(projectId, fileId);
 		try
