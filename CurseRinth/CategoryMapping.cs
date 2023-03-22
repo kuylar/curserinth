@@ -33,7 +33,7 @@ public static class CategoryMapping
 		ResourcePackCategories = rpcats.Data;
 	}
 
-	public static int GetInt(uint classId, string? slug)
+	public static int GetInt(int classId, string? slug)
 	{
 		if (slug is null) return 0;
 		try

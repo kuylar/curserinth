@@ -31,7 +31,7 @@ public static class Utils
 	public static string GetCategoryName(Class category) => GetCategoryName(category.Name);
 	public static string GetCategoryName(string name) => name.Replace(' ', '-').ToLower();
 
-	public static ModrinthLicense GetLicenseFromMod(uint projectType, string id, string slug)
+	public static ModrinthLicense GetLicenseFromMod(int projectType, string id, string slug)
 	{
 		return new ModrinthLicense("CUSTOM", "Unknown License", $"https://www.curseforge.com/project/{id}/license");
 		// cloudflare makes this not work :(
@@ -53,9 +53,9 @@ public static class Utils
 	}
 	
 	public static async Task<GenericListResponse<BetaMod>> BetaSearch(this ApiClient client, 
-		uint gameId, uint? classId = null, uint[]? categoryIds = null, string? gameVersion = null, string? searchFilter = null,
+		int gameId, int? classId = null, int[]? categoryIds = null, string? gameVersion = null, string? searchFilter = null,
 		ModsSearchSortField? sortField = null, ModsSearchSortOrder sortOrder = ModsSearchSortOrder.Descending, ModLoaderType[]? modLoaderTypes = null,
-		string? slug = null, uint? gameVersionTypeId = null, uint? index = null, uint? pageSize = null)
+		string? slug = null, int? gameVersionTypeId = null, int? index = null, int? pageSize = null)
 	{
 		categoryIds = categoryIds?.Where(x => x != 0).ToArray();
 		modLoaderTypes = modLoaderTypes?.Where(x => x != 0).ToArray();

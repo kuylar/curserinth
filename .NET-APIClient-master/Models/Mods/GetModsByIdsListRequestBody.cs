@@ -4,6 +4,6 @@ namespace CurseForge.APIClient.Models.Mods
 {
     public class GetModsByIdsListRequestBody
     {
-        public List<uint> ModIds { get; set; } = new List<uint>();
+        public List<int> ModIds { get; set; } = new List<int>();
     }
 }

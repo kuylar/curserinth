@@ -23,7 +23,7 @@ public class TeamsController : Controller
 	[Route("project/{slug}/members")]
 	public async Task<List<ModrinthTeamMember>> GetProject(string slug)
 	{
-		if (!Slug.TryGetId(slug, out uint cfId))
+		if (!Slug.TryGetId(slug, out int cfId))
 		{
 			Response.StatusCode = 404;
 			return null!;
