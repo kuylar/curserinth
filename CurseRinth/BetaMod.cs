@@ -17,7 +17,7 @@ public class BetaMod
     public string Slug { get; set; }
 
     [JsonProperty("author")]
-    public string Author { get; set; }
+    public BetaAuthor? Author { get; set; }
 
     [JsonProperty("hasComments")]
     public bool HasComments { get; set; }
@@ -96,6 +96,13 @@ public class BetaMod
 
     [JsonProperty("isClientCompatible")]
     public bool IsClientCompatible { get; set; }
+}
+
+public class BetaAuthor
+{
+    [JsonProperty("id")] public int Id;
+    [JsonProperty("isEarlyAccessAuthor")] public bool IsEarlyAccessAuthor;
+    [JsonProperty("name")] public string Name;
 }
 
 public class Class
