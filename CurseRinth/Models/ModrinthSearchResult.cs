@@ -109,7 +109,7 @@ public class ModrinthSearchResult
 		Downloads = mod.Downloads;
 		IconUrl = mod.AvatarUrl.ToString();
 		Id = mod.Id.ToString();
-		Author = mod.Author;
+		Author = mod.Author?.Name ?? "Unknown Author";
 		DateCreated = DateTimeOffset.FromUnixTimeSeconds(mod.CreationDate).ToString("O");
 		DateModified = DateTimeOffset.FromUnixTimeSeconds(mod.UpdateDate).ToString("O");
 		Followers = 0;
