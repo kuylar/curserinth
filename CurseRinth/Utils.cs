@@ -64,7 +64,7 @@ public static class Utils
 			.Append("gameId=" + gameId)
 			.Append("&index=" + index)
 			.Append("&classId=" + classId)
-			.Append("&filterText=" + searchFilter)
+			.Append("&filterText=" + searchFilter?.Trim())
 			.Append("&gameVersion=" + gameVersion)
 			.Append("&pageSize=" + pageSize)
 			.Append("&sortField=" + (int)(sortField ?? 0))
