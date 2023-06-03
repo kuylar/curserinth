@@ -1,5 +1,6 @@
 ﻿using CurseForge.APIClient;
 using CurseForge.APIClient.Models;
+using CurseForge.APIClient.Models.Files;
 using CurseForge.APIClient.Models.Mods;
 using CurseRinth.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -33,8 +34,19 @@ public class VersionsController : Controller
 		GenericResponse<Mod>? projectResponse = await Api.GetModAsync(cfId);
 		Mod project = projectResponse.Data;
 		GenericListResponse<File> files = await Api.GetModFilesAsync(cfId, pageSize: 20);
+		List<File> finalFiles = files.Data;
+		List<uint> serverPackFileIds = files.Data.Where(x => x.ServerPackFileId != null).Select(x => (uint)x.ServerPackFileId!).ToList();
+		if (serverPackFileIds.Count > 0)
+		{
+			GenericListResponse<File> serverFiles = await Api.GetFilesAsync(new GetModFilesRequestBody
+			{
+				FileIds = serverPackFileIds
+			});
+			finalFiles.AddRange(serverFiles.Data);
+			finalFiles = finalFiles.OrderByDescending(x => x.Id).ToList();
+		}
 		return featured
-			? files.Data
+			? finalFiles
 				.OrderBy(x => x.ReleaseType)
 				.DistinctBy(x => x.GameVersions.First(y =>
 					!y.Contains("forge", StringComparison.OrdinalIgnoreCase) &&
@@ -42,7 +54,7 @@ public class VersionsController : Controller
 					!y.Contains("quilt", StringComparison.OrdinalIgnoreCase)))
 				.Take(3)
 				.Select(x => new ModrinthVersion(project, x, Api))
-			: files.Data
+			: finalFiles
 				.Select(x => new ModrinthVersion(project, x, Api));
 	}
 }
