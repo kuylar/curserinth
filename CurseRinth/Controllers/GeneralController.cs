@@ -64,12 +64,14 @@ public class GeneralController : Controller
 
 	[Route("/convertModpack/{projectId}/{fileId}")]
 	[HttpGet]
-	public async Task ConvertModpack(int projectId, int fileId)
+	public async Task<NotFoundResult> ConvertModpack(int projectId, int fileId)
 	{
-		GenericResponse<File> fileInfo = await Api.GetModFileAsync(projectId, fileId);
+		// disabled for now
+		return NotFound();
 		try
 		{
 			// download the zip archive
+			GenericResponse<File> fileInfo = await Api.GetModFileAsync(projectId, fileId);
 			HttpResponseMessage response = await _client.GetAsync(fileInfo.Data.DownloadUrl);
 
 			// copy it to memorystream so we can send it back to the user
